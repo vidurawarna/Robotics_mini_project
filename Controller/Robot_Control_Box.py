@@ -120,6 +120,9 @@ class control_window:
         self.a = []
         self.d = []
         self.theta = []
+        self.grab_angle = 20
+        self.release_angle = 100
+        self.gripper = 100
         
         self.pos  = [DoubleVar() for i in range(3)]
         self.EF_ori = IntVar()
@@ -132,7 +135,7 @@ class control_window:
         
         self.output_mat_disp = [[StringVar() for m in range (4)] for n in range(4)]
         
-        self.arduino = serial.Serial(port='COM3', baudrate=9600, timeout=.1)
+        self.arduino = serial.Serial(port='COM10', baudrate=9600, timeout=.1)
               
         for i in range(self.no_of_links):
             self.a.append(DoubleVar())
@@ -247,27 +250,64 @@ class control_window:
         
         f.grid(row=20)
                
-        Button(self.frame, text='exit',bg='red',command=self.exit_cmd).grid(row=25,column=8) 
-        Button(self.frame, text='Send to arm',bg='green',command=self.send_to_arm).grid(row=24,column=8) 
+        f = Frame(self.frame)
+        Button(f , text='Move Arm',bg='green',command=self.send_to_arm).grid(row=0,column=0)
+        Button(f, text='Grab',bg='blue',command=self.grab_obj).grid(row=0,column=2)
+        Button(f, text='Release',bg='yellow',command=self.release_obj).grid(row=0,column=4) 
+        Button(f, text='exit',bg='red',command=self.exit_cmd).grid(row=0,column=8) 
+        f.grid(row=22)
         # Button(self.frame, text='cal',bg='green',command=self.output_mat).grid(row=self.no_of_links+3) 
         self.frame.pack()
         
     def map_angle_range(self,val,in_min,in_max,out_min,out_max):
         return int((val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
         
-    def send_to_arm(self):
+    def grab_obj(self):
+        self.gripper = 20
         data_array = [self.theta[i].get() for i in range(4)]
+        data_array.append(self.gripper)
     
-        data_array[2] = self.map_angle_range(data_array[2],-180,0,0,180)
+        data_array[2] = -data_array[2]
+        data_array[3] = self.map_angle_range(data_array[3],-90,90,0,180)
+        
+        data_string = ','.join(str(value) for value in data_array)
+        data_string+=","  
+        
+        self.arduino.write(data_string.encode())
+    
+    def release_obj(self):
+        self.gripper = 90
+        data_array = [self.theta[i].get() for i in range(4)]
+        data_array.append(self.gripper)
+    
+        data_array[2] = -data_array[2]
         data_array[3] = self.map_angle_range(data_array[3],-90,90,0,180)
         
         data_string = ','.join(str(value) for value in data_array)
         data_string+=","
-        # Send the data over the serial port
+        
         self.arduino.write(data_string.encode())
-        x = self.arduino.readline().decode()
-        print(x)
-        return [self.theta[i].get() for i in range(4)]
+        
+    def send_to_arm(self):
+        data_array = [self.theta[i].get() for i in range(4)]
+        data_array.append(self.gripper)
+    
+        data_array[2] = -data_array[2]
+        data_array[3] = self.map_angle_range(data_array[3],-90,90,0,180)
+        
+        data_string = ','.join(str(value) for value in data_array)
+        data_string+=","
+        # start_str = "A"
+        # end_str = "Z"
+        # Send the data over the serial port
+    
+        
+        self.arduino.write(data_string.encode())
+     
+        
+        # x = self.arduino.readline().decode()
+        # print(x)
+        
      
     def output_mat(self,event=0):
         T = np.array([[1,0,0,0],
