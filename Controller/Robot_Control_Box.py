@@ -103,9 +103,9 @@ class control_window:
     def __init__(self,master,l,var,mins,maxs):
         
         init_alpha = [90,0,0,0]
-        init_a = [1.3,12,12,11]
+        init_a = [1.3,12,12,12.5]
         init_d = [9.5,0,0,0]
-        init_theta = [0,90,-90,-90]
+        init_theta = [90,90,-90,0]
         init_ori = -90
         
         self.root = master
@@ -135,7 +135,7 @@ class control_window:
         
         self.output_mat_disp = [[StringVar() for m in range (4)] for n in range(4)]
         
-        self.arduino = serial.Serial(port='COM10', baudrate=9600, timeout=.1)
+        self.arduino = serial.Serial(port='COM11', baudrate=9600, timeout=.1)
               
         for i in range(self.no_of_links):
             self.a.append(DoubleVar())
@@ -263,7 +263,7 @@ class control_window:
         return int((val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
         
     def grab_obj(self):
-        self.gripper = 20
+        self.gripper = 90
         data_array = [self.theta[i].get() for i in range(4)]
         data_array.append(self.gripper)
     
@@ -276,7 +276,7 @@ class control_window:
         self.arduino.write(data_string.encode())
     
     def release_obj(self):
-        self.gripper = 90
+        self.gripper = 160
         data_array = [self.theta[i].get() for i in range(4)]
         data_array.append(self.gripper)
     
@@ -336,7 +336,7 @@ class control_window:
         self.EF_ori.set(self.theta[1].get()+self.theta[2].get()+self.theta[3].get())
     
     def inverse_kinematics(self,event=0):
-        joint_angles_default = [0,90,-90,-90]
+        joint_angles_default = [90,90,-90,0]
         
         self.joint_angles=[]
         angles = []
@@ -361,12 +361,12 @@ class control_window:
             
             # calculating theta 3 and thata 2
             if y!=0:
-                A = y/(12*math.sin(math.radians(t1))) - 0.108333 - 0.916667*math.cos(math.radians(EF_orientation))
+                A = y/(12*math.sin(math.radians(t1))) - 0.108333 - 1.047167*math.cos(math.radians(EF_orientation))
             elif x!=0:
-                A = x/(12*math.cos(math.radians(t1))) - 0.108333 - 0.916667*math.cos(math.radians(EF_orientation))
+                A = x/(12*math.cos(math.radians(t1))) - 0.108333 - 1.047167*math.cos(math.radians(EF_orientation))
             else:
                 break
-            B = (z - 9.5 - 11*math.sin(math.radians(EF_orientation)))/12
+            B = (z - 9.5 - 12.5*math.sin(math.radians(EF_orientation)))/12
             l = (A**2 + B**2 - 2)/(2)
             if(l**2<1):
                 
