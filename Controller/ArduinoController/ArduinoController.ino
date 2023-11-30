@@ -10,17 +10,19 @@
 
 #define buzzer_pin 12
 
-#define traj_time 8
-#define time_step 5
+#define traj_time 2
+#define time_step 50
+#define motor_speed 30
 
-#include <Servo.h>
+#include <VarSpeedServo.h>
 
-Servo motor1,motor2,motor3,motor4,motor5,gripper;
-Servo joints[5] = {motor1,motor2,motor3,motor4,gripper};
+VarSpeedServo motor1,motor2,motor3,motor4,motor5,gripper;
+VarSpeedServo joints[5] = {motor1,motor2,motor3,motor4,gripper};
 
 int angles[5] = {90,90,90,90,90};
 int previous_angles[5] = {90,90,90,90,90};
 int targets[5] = {0,0,0,0,0};
+int speeds[5] = {10,30,30,60,30};
 
 bool receieved_data = false;
 /*
@@ -55,7 +57,7 @@ void setup() {
 //    }
 
 
-//  motor4.write(0);
+//  motor4.slowmove(0);
   beep(2);  
 }
 
@@ -88,10 +90,10 @@ void rotateJoint(int joint_id, int theta){
   int x = previous_angles[joint_id];
   while(x!=theta){
     if(x>theta){
-      joints[joint_id].write(--x);
+      joints[joint_id].slowmove(--x,motor_speed);
     }
     else if(x<theta){
-      joints[joint_id].write(++x);
+      joints[joint_id].slowmove(++x,motor_speed);
     }
     delay(20);
   }
@@ -118,41 +120,37 @@ void trajJointMove(int j){
     targets[i] = angles[i] - previous_angles[i];
   }
 
-  
+  double start_t = millis();
 
   for(int i=0;i<5;i++){
     if(angles[i]!=previous_angles[i]){
       changed = true;
     }
   }
-  double start_t = millis();
+
   if(changed){
-  
+//    joints[0].write(angles[0],speeds[0],false);
     // Start the control loop
     while(((millis()-start_t)/1000)<=traj_time){ 
 //      Serial.println(t);
       // Turn each joint at time steps
       for(int i=0;i<j;i++){
+
+        
+        
         
         t = (millis() - start_t)/1000;
         
         // Calculate the tragectory function output
         int q = (int)(targets[i]*pow(t/traj_time,2)*(3 - 2*t/traj_time));
   
-        // Turn the motor    
-        joints[i].write(previous_angles[i] + q);
+        // Turn the motor 
+          
+        joints[i].write(previous_angles[i] + q,speeds[i],false);
         
         // Update current angle
         current_angles[i] = previous_angles[i] + q;  
-  
-        
-//          for(int i=0;i<j;i++){
-//          Serial.print(i);
-//          Serial.print(": ");
-//          Serial.print(current_angles[i]);
-//          Serial.print(", ");
-//        }
-//        Serial.println("");
+ 
       }
       
       while((millis()-start_t)<=time_step){}

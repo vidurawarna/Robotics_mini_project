@@ -229,24 +229,26 @@ class control_window:
         
         Label(f,text="Inverse Kinematics",width = 20,font='Helvetica 12 bold').grid(row=0)
         
-        Label(f,text = "X coordinate",width = label_width).grid(row=1,column=0)
-        Scale(f,length = scale_width*2,resolution=0.1,command=self.inverse_kinematics, from_=-self.pos_limit, to=self.pos_limit, orient='horizontal',variable=self.pos[0]).grid(row=1,column=1)  
-        Spinbox(f,width=text_width,command=self.inverse_kinematics,from_=-self.pos_limit, to=self.pos_limit,increment=0.1,textvariable = self.pos[0]).grid(row=1,column=2) 
-        
-        Label(f,text = "Y coordinate",width = label_width).grid(row=2,column=0)
-        Scale(f,length = scale_width*2,resolution=0.1,command=self.inverse_kinematics, from_=-self.pos_limit, to=self.pos_limit, orient='horizontal',variable=self.pos[1]).grid(row=2,column=1)
-        Spinbox(f,width=text_width,command=self.inverse_kinematics,from_=-self.pos_limit, to=self.pos_limit,increment=0.1,textvariable = self.pos[1]).grid(row=2,column=2)   
-        
-        Label(f,text = "Z coordinate",width = label_width).grid(row=3,column=0)
-        Scale(f,length = scale_width*2,resolution=0.1,command=self.inverse_kinematics, from_=0, to=self.pos_limit, orient='horizontal',variable=self.pos[2]).grid(row=3,column=1)  
-        Spinbox(f,width=text_width,command=self.inverse_kinematics,from_=-self.pos_limit, to=self.pos_limit,increment=0.1,textvariable = self.pos[2]).grid(row=3,column=2) 
-        
-        Label(f,text = "EF Orientation",width = label_width).grid(row=4,column=0)
-        Scale(f,length = scale_width*2,resolution=1,command=self.inverse_kinematics, from_= -90, to=90, orient='horizontal',variable=self.EF_ori).grid(row=4,column=1)  
-        Spinbox(f,width=text_width,command=self.inverse_kinematics,from_=-90, to=90,increment=1,textvariable = self.EF_ori).grid(row=4,column=2) 
-        
         self.ll=Label(f,textvariable=self.solution,width = label_width)
-        self.ll.grid(row=5,column=1)
+        self.ll.grid(row=1,column=1)
+        
+        Label(f,text = "X coordinate",width = label_width).grid(row=2,column=0)
+        Scale(f,length = scale_width*2,resolution=0.1,command=self.inverse_kinematics, from_=-self.pos_limit, to=self.pos_limit, orient='horizontal',variable=self.pos[0]).grid(row=2,column=1)  
+        Spinbox(f,width=text_width,command=self.inverse_kinematics,from_=-self.pos_limit, to=self.pos_limit,increment=0.1,textvariable = self.pos[0]).grid(row=2,column=2) 
+        
+        Label(f,text = "Y coordinate",width = label_width).grid(row=3,column=0)
+        Scale(f,length = scale_width*2,resolution=0.1,command=self.inverse_kinematics, from_=-self.pos_limit, to=self.pos_limit, orient='horizontal',variable=self.pos[1]).grid(row=3,column=1)
+        Spinbox(f,width=text_width,command=self.inverse_kinematics,from_=-self.pos_limit, to=self.pos_limit,increment=0.1,textvariable = self.pos[1]).grid(row=3,column=2)   
+        
+        Label(f,text = "Z coordinate",width = label_width).grid(row=4,column=0)
+        Scale(f,length = scale_width*2,resolution=0.1,command=self.inverse_kinematics, from_=0, to=self.pos_limit, orient='horizontal',variable=self.pos[2]).grid(row=4,column=1)  
+        Spinbox(f,width=text_width,command=self.inverse_kinematics,from_=-self.pos_limit, to=self.pos_limit,increment=0.1,textvariable = self.pos[2]).grid(row=4,column=2) 
+        
+        Label(f,text = "EF Orientation",width = label_width).grid(row=5,column=0)
+        Scale(f,length = scale_width*2,resolution=1,command=self.inverse_kinematics, from_= -90, to=90, orient='horizontal',variable=self.EF_ori).grid(row=5,column=1)  
+        Spinbox(f,width=text_width,command=self.inverse_kinematics,from_=-90, to=90,increment=1,textvariable = self.EF_ori).grid(row=5,column=2) 
+        
+        
         
         f.grid(row=20)
                
