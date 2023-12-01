@@ -22,7 +22,7 @@ VarSpeedServo joints[5] = {motor1,motor2,motor3,motor4,gripper};
 int angles[5] = {90,90,90,90,90};
 int previous_angles[5] = {90,90,90,90,90};
 int targets[5] = {0,0,0,0,0};
-int speeds[5] = {10,30,30,60,30};
+int speeds[5] = {10,30,30,30,30};
 
 bool receieved_data = false;
 /*

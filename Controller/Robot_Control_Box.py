@@ -120,9 +120,9 @@ class control_window:
         self.a = []
         self.d = []
         self.theta = []
-        self.grab_angle = 20
-        self.release_angle = 100
-        self.gripper = 100
+        self.grab_angle = 120
+        self.release_angle = 160
+        self.gripper = 90
         
         self.pos  = [DoubleVar() for i in range(3)]
         self.EF_ori = IntVar()
@@ -135,7 +135,7 @@ class control_window:
         
         self.output_mat_disp = [[StringVar() for m in range (4)] for n in range(4)]
         
-        self.arduino = serial.Serial(port='COM11', baudrate=9600, timeout=.1)
+        # self.arduino = serial.Serial(port='COM11', baudrate=9600, timeout=.1)
               
         for i in range(self.no_of_links):
             self.a.append(DoubleVar())
@@ -265,7 +265,7 @@ class control_window:
         return int((val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
         
     def grab_obj(self):
-        self.gripper = 90
+        self.gripper = 120
         data_array = [self.theta[i].get() for i in range(4)]
         data_array.append(self.gripper)
     
